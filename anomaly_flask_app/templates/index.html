@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anomaly Detection App</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 30px; }
+        .box { border: 1px solid #ccc; padding: 20px; width: 450px; margin: auto; border-radius: 10px; }
+        button { padding: 10px 20px; cursor: pointer; }
+        .warning { color: red; }
+        input { padding: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+
+    <h2>Retail Anomaly Detection</h2>
+
+    {% if error %}
+        <p class="warning">{{ error }}</p>
+    {% endif %}
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv,.xlsx" required><br><br>
+
+        <!-- Threshold input -->
+        <label>Threshold:</label>
+        <input type="number" step="0.1" name="threshold" value="0"><br><br>
+
+        <button type="submit">Detect Anomalies</button>
+    </form>
+
+    {% if show_result %}
+        <hr>
+        <h3>Results</h3>
+        <p><b>File:</b> {{ filename }}</p>
+        <p><b>Detected Column:</b> {{ column }}</p>
+        <p><b>Threshold:</b> {{ threshold }}</p>
+        <p>Total Transactions: {{ total }}</p>
+        <p>Anomalies Found: {{ anomalies }}</p>
+        <p>Total |Z-score|: {{ z_score_sum }}</p>
+        <p>Anomalies |Z-score| Sum: {{ anomaly_z_score_sum }}</p>
+
+        <img src="{{ plot_url1 }}" width="400"><br><br>
+        <img src="{{ plot_url2 }}" width="400"><br><br>
+
+        <a href="/download">
+            <button>Download Report</button>
+        </a>
+    {% endif %}
+</div>
+
+</body>
+</html>
