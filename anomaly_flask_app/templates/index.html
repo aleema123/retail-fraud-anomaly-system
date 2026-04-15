@@ -1,61 +1,164 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Retail Anomaly Detection</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<title>Smart Retail Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-<div class="box">
+<div class="main">
 
-<h1>Retail Anomaly Detection</h1>
+<!-- Sidebar -->
+<div class="sidebar">
+
+<h2>📊</h2>
+
+<a href="#">Upload Data</a>
+<a href="#">Threshold</a>
+<a href="#">Graph</a>
+<a href="#">Report</a>
+
+</div>
+
+
+<!-- Main Content -->
+<div class="content">
+
+<!-- Header -->
+<div class="top-box">
+
+<h1>Smart Retail Anomaly Detection Dashboard</h1>
+<p>Detect unusual patterns using statistical analysis</p>
 
 <form action="/upload" method="post" enctype="multipart/form-data">
 
-    <input type="file" name="file" required>
+<input type="file" name="file" required>
 
-    <div class="threshold-row">
-        Threshold:
-        <input type="number" name="threshold" step="0.1" value="2.0">
-    </div>
+<label>Threshold:</label>
 
-    <button type="submit">Detect Anomalies</button>
+<input type="range"
+min="1"
+max="5"
+step="0.1"
+value="2"
+name="threshold"
+oninput="this.nextElementSibling.value=this.value">
+
+<output>2</output>
+
+<button type="submit">Detect Anomalies</button>
 
 </form>
 
+</div>
+
+
 {% if show_result %}
 
-<hr>
+<!-- Cards -->
+<div class="cards">
 
-<h2>Results</h2>
+<div class="card green">
+<div class="card-top">
+<span class="icon">📊</span>
+<div>
+<h3>Total Transactions</h3>
+<p>{{ total }}</p>
+</div>
+</div>
+</div>
 
-<table class="result-table">
+<div class="card red">
+<div class="card-top">
+<span class="icon">❗</span>
+<div>
+<h3>Anomalies Found</h3>
+<p>{{ anomalies }}</p>
+</div>
+</div>
+</div>
 
-<tr><td>File:</td><td>{{ filename }}</td></tr>
-<tr><td>Detected Column:</td><td>{{ column }}</td></tr>
-<tr><td>Total Transactions:</td><td>{{ total }}</td></tr>
-<tr><td>Threshold Used:</td><td>{{ threshold }}</td></tr>
-<tr><td>Anomalies Found:</td><td>{{ anomalies }}</td></tr>
-<tr><td>Total |Z-score|:</td><td>{{ total_z }}</td></tr>
-<tr><td>Anomaly |Z-score|:</td><td>{{ anomaly_z }}</td></tr>
+<div class="card blue">
+<div class="card-top">
+<span class="icon">📈</span>
+<div>
+<h3>Avg Anomaly Z-Score</h3>
+<p>{{ avg }}</p>
+</div>
+</div>
+</div>
+
+<div class="card purple">
+<div class="card-top">
+<span class="icon">📱</span>
+<div>
+<h3>Detected Column</h3>
+<p>{{ column }}</p>
+</div>
+</div>
+</div>
+
+</div>
+
+
+<!-- Charts -->
+<div class="charts">
+
+<div class="graph-box">
+<h2>Scatter Plot</h2>
+<img src="{{ url_for('static', filename='chart1.png') }}">
+</div>
+
+<div class="graph-box">
+<h2>Trend Line</h2>
+<img src="{{ url_for('static', filename='chart2.png') }}">
+</div>
+
+<div class="graph-box">
+<h2>Top Anomalies</h2>
+<img src="{{ url_for('static', filename='chart3.png') }}">
+</div>
+
+</div>
+
+
+<!-- Download -->
+<div class="download">
+<a href="/download">
+<button>⬇ Download Report</button>
+</a>
+</div>
+
+
+<!-- Table -->
+<div class="table-box">
+
+<h2>Anomaly Table</h2>
+
+<table>
+
+<tr>
+{% for col in columns %}
+<th>{{ col }}</th>
+{% endfor %}
+</tr>
+
+{% for row in table_data %}
+<tr>
+{% for col in columns %}
+<td>{{ row[col] }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
 
 </table>
 
-<div class="charts">
-    <img src="{{ url_for('static', filename='chart1.png') }}">
-    <img src="{{ url_for('static', filename='chart2.png') }}">
-    <img src="{{ url_for('static', filename='chart3.png') }}">
-</div>
-
-<div class="download">
-    <a href="/download">
-        <button type="button">Download Report</button>
-    </a>
 </div>
 
 {% endif %}
 
+</div>
 </div>
 
 </body>
