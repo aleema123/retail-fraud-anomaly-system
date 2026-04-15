@@ -2,84 +2,253 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
+font-family:Segoe UI, Arial, sans-serif;
 }
 
 body{
-font-family:Arial;
-background:#eef2f7;
-padding:30px;
+background:linear-gradient(135deg,#060b1c,#0a1025,#111827);
+color:#fff;
 }
 
-.box{
-width:950px;
-margin:auto;
-background:white;
-padding:40px;
-border-radius:15px;
-box-shadow:0 8px 25px rgba(0,0,0,.08);
+/* Layout */
+.main{
+display:flex;
+min-height:100vh;
 }
 
-h1{
+/* Sidebar */
+.sidebar{
+width:230px;
+background:rgba(255,255,255,0.03);
+border-right:1px solid rgba(255,255,255,0.05);
+padding:25px 18px;
+}
+
+.sidebar h2{
+font-size:34px;
+margin-bottom:35px;
 text-align:center;
-margin-bottom:30px;
 }
 
-form{
-text-align:center;
+.sidebar a{
+display:block;
+padding:14px 16px;
+margin-bottom:14px;
+border-radius:12px;
+text-decoration:none;
+color:#cbd5e1;
+background:rgba(255,255,255,0.03);
+transition:0.3s;
 }
 
-input[type=file]{
+.sidebar a:hover{
+background:#2563eb;
+color:white;
+}
+
+/* Content */
+.content{
+flex:1;
+padding:28px;
+}
+
+/* Header */
+.top-box{
+background:linear-gradient(135deg,#121b38,#111827);
+padding:26px;
+border-radius:20px;
+box-shadow:0 8px 25px rgba(0,0,0,0.35);
+}
+
+.top-box h1{
+font-size:30px;
+margin-bottom:8px;
+}
+
+.top-box p{
+color:#94a3b8;
 margin-bottom:20px;
 }
 
-.threshold-row{
-margin:20px;
-font-size:20px;
+form{
+display:flex;
+gap:15px;
+align-items:center;
+flex-wrap:wrap;
 }
 
-.threshold-row input{
+input[type=file]{
+background:#fff;
+color:#000;
 padding:8px;
-width:180px;
+border-radius:10px;
+}
+
+input[type=range]{
+width:170px;
+}
+
+output{
+color:#38bdf8;
+font-weight:bold;
 }
 
 button{
-background:#1d72f3;
-color:white;
-padding:12px 25px;
+padding:12px 20px;
 border:none;
-border-radius:8px;
+border-radius:10px;
+background:#2563eb;
+color:#fff;
 cursor:pointer;
+font-weight:600;
 }
 
 button:hover{
-background:#0c5fe0;
+background:#1d4ed8;
 }
 
-.result-table{
+/* Cards */
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+margin-top:24px;
+}
+
+.card{
+padding:18px;
+border-radius:18px;
+background:linear-gradient(135deg,#101827,#131d35);
+box-shadow:0 6px 20px rgba(0,0,0,0.25);
+min-height:110px;
+display:flex;
+align-items:center;
+}
+
+.card-top{
+display:flex;
+align-items:center;
+gap:14px;
 width:100%;
-margin-top:20px;
-border-collapse:collapse;
 }
 
-.result-table td{
-padding:12px;
-border-bottom:1px solid #ddd;
-font-size:22px;
-}
-
-.result-table td:first-child{
-font-weight:bold;
-width:50%;
-}
-
-.charts img{
-width:100%;
-margin-top:20px;
-border-radius:10px;
-border:1px solid #ddd;
-}
-
-.download{
+.icon{
+font-size:34px;
+min-width:45px;
 text-align:center;
-margin-top:20px;
+}
+
+.card h3{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:6px;
+}
+
+.card p{
+font-size:32px;
+font-weight:700;
+line-height:1.1;
+}
+
+.green p,.green .icon{color:#22c55e;}
+.red p,.red .icon{color:#ef4444;}
+.blue p,.blue .icon{color:#38bdf8;}
+.purple p,.purple .icon{color:#a855f7;}
+
+/* Charts */
+.charts{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+margin-top:24px;
+}
+
+.graph-box{
+background:linear-gradient(135deg,#101827,#131d35);
+border-radius:18px;
+padding:18px;
+box-shadow:0 6px 20px rgba(0,0,0,0.25);
+min-height:360px;
+}
+
+.graph-box h2{
+text-align:center;
+color:#38bdf8;
+font-size:18px;
+margin-bottom:14px;
+}
+
+.graph-box img{
+width:100%;
+height:280px;
+object-fit:contain;
+border-radius:12px;
+background:#0b1225;
+padding:10px;
+}
+
+/* Download */
+.download{
+margin-top:22px;
+text-align:center;
+}
+
+/* Table */
+.table-box{
+margin-top:24px;
+background:linear-gradient(135deg,#101827,#131d35);
+padding:20px;
+border-radius:18px;
+overflow:auto;
+}
+
+.table-box h2{
+margin-bottom:15px;
+color:#38bdf8;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:900px;
+}
+
+th,td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid rgba(255,255,255,0.06);
+font-size:14px;
+}
+
+th{
+background:#1e293b;
+}
+
+tr:hover{
+background:rgba(255,255,255,0.03);
+}
+
+/* Responsive */
+@media(max-width:1200px){
+.cards{
+grid-template-columns:repeat(2,1fr);
+}
+
+.charts{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:768px){
+.main{
+flex-direction:column;
+}
+
+.sidebar{
+width:100%;
+}
+
+.cards{
+grid-template-columns:1fr;
+}
 }
