@@ -1,3 +1,5 @@
+<!-- templates/index.html -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,27 +11,19 @@
 
 <div class="main">
 
-<!-- Sidebar -->
 <div class="sidebar">
-
 <h2>📊</h2>
-
 <a href="#">Upload Data</a>
 <a href="#">Threshold</a>
-<a href="#">Graph</a>
+<a href="#">Graphs</a>
 <a href="#">Report</a>
-
 </div>
 
-
-<!-- Main Content -->
 <div class="content">
 
-<!-- Header -->
 <div class="top-box">
-
 <h1>Smart Retail Anomaly Detection Dashboard</h1>
-<p>Detect unusual patterns using statistical analysis</p>
+<p>Detect unusual patterns using Statistical Analysis / ML Model</p>
 
 <form action="/upload" method="post" enctype="multipart/form-data">
 
@@ -50,18 +44,14 @@ oninput="this.nextElementSibling.value=this.value">
 <button type="submit">Detect Anomalies</button>
 
 </form>
-
 </div>
-
 
 {% if show_result %}
 
-<!-- Cards -->
 <div class="cards">
 
 <div class="card green">
 <div class="card-top">
-<span class="icon">📊</span>
 <div>
 <h3>Total Transactions</h3>
 <p>{{ total }}</p>
@@ -71,7 +61,6 @@ oninput="this.nextElementSibling.value=this.value">
 
 <div class="card red">
 <div class="card-top">
-<span class="icon">❗</span>
 <div>
 <h3>Anomalies Found</h3>
 <p>{{ anomalies }}</p>
@@ -81,9 +70,8 @@ oninput="this.nextElementSibling.value=this.value">
 
 <div class="card blue">
 <div class="card-top">
-<span class="icon">📈</span>
 <div>
-<h3>Avg Anomaly Z-Score</h3>
+<h3>Avg Score</h3>
 <p>{{ avg }}</p>
 </div>
 </div>
@@ -91,7 +79,6 @@ oninput="this.nextElementSibling.value=this.value">
 
 <div class="card purple">
 <div class="card-top">
-<span class="icon">📱</span>
 <div>
 <h3>Detected Column</h3>
 <p>{{ column }}</p>
@@ -101,12 +88,10 @@ oninput="this.nextElementSibling.value=this.value">
 
 </div>
 
-
-<!-- Charts -->
 <div class="charts">
 
 <div class="graph-box">
-<h2>Scatter Plot</h2>
+<h2>Line Graph</h2>
 <img src="{{ url_for('static', filename='chart1.png') }}">
 </div>
 
@@ -116,22 +101,18 @@ oninput="this.nextElementSibling.value=this.value">
 </div>
 
 <div class="graph-box">
-<h2>Top Anomalies</h2>
+<h2>Histogram</h2>
 <img src="{{ url_for('static', filename='chart3.png') }}">
 </div>
 
 </div>
 
-
-<!-- Download -->
 <div class="download">
 <a href="/download">
 <button>⬇ Download Report</button>
 </a>
 </div>
 
-
-<!-- Table -->
 <div class="table-box">
 
 <h2>Anomaly Table</h2>
