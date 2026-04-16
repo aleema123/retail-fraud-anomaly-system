@@ -1,3 +1,5 @@
+/* static/style.css */
+
 *{
 margin:0;
 padding:0;
@@ -10,7 +12,6 @@ background:linear-gradient(135deg,#060b1c,#0a1025,#111827);
 color:#fff;
 }
 
-/* Layout */
 .main{
 display:flex;
 min-height:100vh;
@@ -52,7 +53,7 @@ flex:1;
 padding:28px;
 }
 
-/* Header */
+/* Top box */
 .top-box{
 background:linear-gradient(135deg,#121b38,#111827);
 padding:26px;
@@ -89,8 +90,8 @@ width:170px;
 }
 
 output{
-color:#38bdf8;
 font-weight:bold;
+color:#38bdf8;
 }
 
 button{
@@ -119,41 +120,27 @@ margin-top:24px;
 padding:18px;
 border-radius:18px;
 background:linear-gradient(135deg,#101827,#131d35);
-box-shadow:0 6px 20px rgba(0,0,0,0.25);
 min-height:110px;
 display:flex;
 align-items:center;
-}
-
-.card-top{
-display:flex;
-align-items:center;
-gap:14px;
-width:100%;
-}
-
-.icon{
-font-size:34px;
-min-width:45px;
-text-align:center;
+box-shadow:0 6px 18px rgba(0,0,0,0.25);
 }
 
 .card h3{
-font-size:14px;
-color:#94a3b8;
-margin-bottom:6px;
+font-size:15px;
+color:#cbd5e1;
+margin-bottom:8px;
 }
 
 .card p{
 font-size:32px;
 font-weight:700;
-line-height:1.1;
 }
 
-.green p,.green .icon{color:#22c55e;}
-.red p,.red .icon{color:#ef4444;}
-.blue p,.blue .icon{color:#38bdf8;}
-.purple p,.purple .icon{color:#a855f7;}
+.green p{color:#22c55e;}
+.red p{color:#ef4444;}
+.blue p{color:#38bdf8;}
+.purple p{color:#a855f7;}
 
 /* Charts */
 .charts{
@@ -167,14 +154,12 @@ margin-top:24px;
 background:linear-gradient(135deg,#101827,#131d35);
 border-radius:18px;
 padding:18px;
-box-shadow:0 6px 20px rgba(0,0,0,0.25);
 min-height:360px;
 }
 
 .graph-box h2{
 text-align:center;
 color:#38bdf8;
-font-size:18px;
 margin-bottom:14px;
 }
 
@@ -182,9 +167,9 @@ margin-bottom:14px;
 width:100%;
 height:280px;
 object-fit:contain;
-border-radius:12px;
 background:#0b1225;
 padding:10px;
+border-radius:12px;
 }
 
 /* Download */
@@ -203,7 +188,7 @@ overflow:auto;
 }
 
 .table-box h2{
-margin-bottom:15px;
+margin-bottom:14px;
 color:#38bdf8;
 }
 
@@ -230,25 +215,12 @@ background:rgba(255,255,255,0.03);
 
 /* Responsive */
 @media(max-width:1200px){
-.cards{
-grid-template-columns:repeat(2,1fr);
-}
-
-.charts{
-grid-template-columns:1fr;
-}
+.cards{grid-template-columns:repeat(2,1fr);}
+.charts{grid-template-columns:1fr;}
 }
 
 @media(max-width:768px){
-.main{
-flex-direction:column;
-}
-
-.sidebar{
-width:100%;
-}
-
-.cards{
-grid-template-columns:1fr;
-}
+.main{flex-direction:column;}
+.sidebar{width:100%;}
+.cards{grid-template-columns:1fr;}
 }
