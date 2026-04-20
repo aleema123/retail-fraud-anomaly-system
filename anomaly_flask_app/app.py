@@ -1,4 +1,7 @@
+# ===============================================
 # app.py
+# SMART RETAIL ANOMALY DETECTION - PRO VERSION
+# ===============================================
 
 from flask import Flask, render_template, request, send_file
 import pandas as pd
@@ -8,9 +11,6 @@ import os
 
 app = Flask(__name__)
 
-# -----------------------------------------
-# Folders
-# -----------------------------------------
 UPLOAD_FOLDER = "uploads"
 STATIC_FOLDER = "static"
 
@@ -20,17 +20,17 @@ os.makedirs(STATIC_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# -----------------------------------------
-# Home Page
-# -----------------------------------------
+# ===============================================
+# HOME
+# ===============================================
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# -----------------------------------------
-# Upload Dataset
-# -----------------------------------------
+# ===============================================
+# UPLOAD
+# ===============================================
 @app.route("/upload", methods=["POST"])
 def upload():
 
@@ -39,23 +39,21 @@ def upload():
     if file.filename == "":
         return "No file selected"
 
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(filepath)
 
     try:
 
-        # -----------------------------------------
-        # Read CSV / Excel
-        # -----------------------------------------
+        # ---------------------------------------
+        # READ FILE
+        # ---------------------------------------
         if file.filename.lower().endswith(".csv"):
 
             try:
                 df = pd.read_csv(filepath, encoding="utf-8")
-
             except:
                 try:
                     df = pd.read_csv(filepath, encoding="latin1")
-
                 except:
                     df = pd.read_csv(filepath, encoding="cp1252")
 
@@ -63,11 +61,11 @@ def upload():
             df = pd.read_excel(filepath)
 
         else:
-            return "Upload CSV or Excel file only"
+            return "Upload CSV or Excel only"
 
-        # -----------------------------------------
-        # Detect Numeric Columns
-        # -----------------------------------------
+        # ---------------------------------------
+        # NUMERIC COLUMN
+        # ---------------------------------------
         numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
 
         if len(numeric_cols) == 0:
@@ -75,122 +73,133 @@ def upload():
 
         column = numeric_cols[0]
 
-        # If Quantity + Price exists
         if "Quantity" in df.columns and "Price" in df.columns:
             df["TotalAmount"] = df["Quantity"] * df["Price"]
             column = "TotalAmount"
 
         threshold = float(request.form["threshold"])
 
-        # -----------------------------------------
-        # Z Score
-        # -----------------------------------------
+        # ---------------------------------------
+        # Z SCORE
+        # ---------------------------------------
         mean = df[column].mean()
         std = df[column].std()
 
         if std == 0:
             std = 1
 
-        df["ZScore"] = (df[column] - mean) / std
+        df["ZScore"] = ((df[column] - mean) / std).round(2)
 
+        # ---------------------------------------
+        # TRUE / FALSE
+        # ---------------------------------------
         df["Is_Anomaly"] = np.where(
-            abs(df["ZScore"]) > threshold,
-            True,
-            False
+            abs(df["ZScore"]) >= threshold,
+            "True",
+            "False"
         )
 
-        anomalies = df[df["Is_Anomaly"] == True]
+        # ---------------------------------------
+        # RISK LEVEL
+        # ---------------------------------------
+        def risk_level(z):
+            z = abs(z)
 
-        if len(anomalies) == 0:
-            anomalies = df.head(10)
+            if z >= 4:
+                return "High"
+            elif z >= 2:
+                return "Medium"
+            else:
+                return "Low"
 
-        anomalies.to_csv("anomalies_report.csv", index=False)
+        df["Risk"] = df["ZScore"].apply(risk_level)
 
-        # -----------------------------------------
-        # Graph Style
-        # -----------------------------------------
+        anomalies = df[df["Is_Anomaly"] == "True"]
+
+        # ---------------------------------------
+        # ACCURACY
+        # ---------------------------------------
+        total = len(df)
+        anomaly_count = len(anomalies)
+
+        normal = total - anomaly_count
+
+        accuracy = round((normal / total) * 100, 2)
+
+        # ---------------------------------------
+        # SAVE REPORT
+        # ---------------------------------------
+        df.to_csv("anomalies_report.csv", index=False)
+
+        # =======================================
+        # CHARTS
+        # =======================================
         plt.style.use("dark_background")
 
-        # -----------------------------------------
-        # Graph 1 Line Chart
-        # -----------------------------------------
-        plt.figure(figsize=(8,4))
-        plt.plot(df.index, df[column], color="cyan", linewidth=2)
+        # ---------------------------------------
+        # Chart 1 Line
+        # ---------------------------------------
+        plt.figure(figsize=(10,4))
+
+        plt.plot(df.index, df[column], color="cyan")
 
         plt.scatter(
             anomalies.index,
             anomalies[column],
             color="red",
-            s=40
+            s=50
         )
 
-        plt.title("Z-Score Anomaly Detection")
+        plt.title("Anomaly Detection")
         plt.tight_layout()
-        plt.savefig(
-            "static/chart1.png",
-            dpi=150,
-            bbox_inches="tight"
-        )
+        plt.savefig("static/chart1.png", dpi=150)
         plt.close()
 
-        # -----------------------------------------
-        # Graph 2 Histogram
-        # -----------------------------------------
-        plt.figure(figsize=(8,4))
-        plt.hist(
-            df[column],
-            bins=25,
-            color="orange",
-            edgecolor="white"
-        )
+        # ---------------------------------------
+        # Chart 2 Histogram
+        # ---------------------------------------
+        plt.figure(figsize=(10,4))
 
-        plt.axvline(
-            mean,
-            color="cyan",
-            linestyle="--",
-            linewidth=2
-        )
+        plt.hist(df[column], bins=30, color="orange", edgecolor="white")
 
-        plt.title("Histogram")
+        plt.axvline(mean, color="cyan", linestyle="--")
+
+        plt.title("Distribution")
         plt.tight_layout()
-        plt.savefig(
-            "static/chart2.png",
-            dpi=150,
-            bbox_inches="tight"
-        )
+        plt.savefig("static/chart2.png", dpi=150)
         plt.close()
 
-        # -----------------------------------------
-        # Graph 3 Boxplot
-        # -----------------------------------------
-        plt.figure(figsize=(8,4))
-        plt.boxplot(df[column], vert=False)
-        plt.title("Boxplot")
-        plt.tight_layout()
-        plt.savefig(
-            "static/chart3.png",
-            dpi=150,
-            bbox_inches="tight"
+        # ---------------------------------------
+        # Chart 3 Pie
+        # ---------------------------------------
+        plt.figure(figsize=(7,7))
+
+        plt.pie(
+            [normal, anomaly_count],
+            labels=["Normal", "Anomaly"],
+            autopct="%1.1f%%"
         )
+
+        plt.title("Normal vs Anomaly")
+        plt.tight_layout()
+        plt.savefig("static/chart3.png", dpi=150)
         plt.close()
 
-        # -----------------------------------------
-        # Table
-        # -----------------------------------------
-        table_data = anomalies.head(20).to_dict(orient="records")
+        # ---------------------------------------
+        # ONLY TRUE ROWS TABLE
+        # ---------------------------------------
+        table_data = anomalies.head(50).to_dict(orient="records")
         columns = anomalies.columns.tolist()
 
-        avg_score = round(
-            anomalies["ZScore"].abs().mean(),
-            2
-        )
+        avg_score = round(df["ZScore"].abs().mean(), 2)
 
         return render_template(
             "index.html",
             show_result=True,
-            total=len(df),
-            anomalies=len(anomalies),
+            total=total,
+            anomalies=anomaly_count,
             avg=avg_score,
+            accuracy=accuracy,
             column=column,
             table_data=table_data,
             columns=columns
@@ -200,9 +209,9 @@ def upload():
         return str(e)
 
 
-# -----------------------------------------
-# Download Report
-# -----------------------------------------
+# ===============================================
+# DOWNLOAD
+# ===============================================
 @app.route("/download")
 def download():
     return send_file(
@@ -211,8 +220,9 @@ def download():
     )
 
 
-# -----------------------------------------
-# Run App
-# -----------------------------------------
+# ===============================================
+# RUN
+# ===============================================
 if __name__ == "__main__":
     app.run(debug=True)
+    
