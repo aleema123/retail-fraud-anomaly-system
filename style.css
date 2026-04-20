@@ -8,7 +8,7 @@ font-family:Segoe UI, Arial, sans-serif;
 }
 
 body{
-background:linear-gradient(135deg,#060b1c,#0a1025,#111827);
+background:linear-gradient(135deg,#050816,#0a1025,#111827);
 color:white;
 }
 
@@ -53,7 +53,7 @@ flex:1;
 padding:28px;
 }
 
-/* Upload Box */
+/* Upload */
 .top-box{
 background:linear-gradient(135deg,#121b38,#111827);
 padding:26px;
@@ -112,7 +112,7 @@ background:#1d4ed8;
 /* Cards */
 .cards{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:18px;
 margin-top:24px;
 }
@@ -131,7 +131,7 @@ margin-bottom:8px;
 }
 
 .card p{
-font-size:32px;
+font-size:30px;
 font-weight:700;
 }
 
@@ -139,23 +139,20 @@ font-weight:700;
 .red p{color:#ef4444;}
 .blue p{color:#38bdf8;}
 .purple p{color:#a855f7;}
+.orange p{color:#f59e0b;}
 
 /* Charts */
 .charts{
 display:grid;
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
 gap:18px;
 margin-top:24px;
-align-items:stretch;
 }
 
 .graph-box{
 background:linear-gradient(135deg,#101827,#131d35);
 padding:16px;
 border-radius:18px;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
 box-shadow:0 6px 18px rgba(0,0,0,0.25);
 }
 
@@ -163,12 +160,11 @@ box-shadow:0 6px 18px rgba(0,0,0,0.25);
 text-align:center;
 margin-bottom:14px;
 color:#38bdf8;
-font-size:22px;
 }
 
 .graph-box img{
 width:100%;
-height:260px;
+height:280px;
 object-fit:cover;
 background:#0b1225;
 padding:8px;
@@ -177,7 +173,7 @@ border-radius:12px;
 
 /* Download */
 .download{
-margin-top:22px;
+margin-top:24px;
 text-align:center;
 }
 
@@ -199,7 +195,7 @@ color:#38bdf8;
 table{
 width:100%;
 border-collapse:collapse;
-min-width:900px;
+min-width:1000px;
 }
 
 th,td{
@@ -217,19 +213,32 @@ tr:hover{
 background:rgba(255,255,255,0.03);
 }
 
+/* Badges */
+.badge-red{
+background:#ef4444;
+padding:5px 10px;
+border-radius:20px;
+font-size:13px;
+font-weight:600;
+}
+
+.badge-green{
+background:#22c55e;
+padding:5px 10px;
+border-radius:20px;
+font-size:13px;
+font-weight:600;
+}
+
+.badge-orange{
+background:#f59e0b;
+padding:5px 10px;
+border-radius:20px;
+font-size:13px;
+font-weight:600;
+}
+
 /* Responsive */
-@media(max-width:1200px){
-
-.cards{
-grid-template-columns:repeat(2,1fr);
-}
-
-.charts{
-grid-template-columns:1fr;
-}
-
-}
-
 @media(max-width:768px){
 
 .main{
@@ -238,10 +247,6 @@ flex-direction:column;
 
 .sidebar{
 width:100%;
-}
-
-.cards{
-grid-template-columns:1fr;
 }
 
 }
