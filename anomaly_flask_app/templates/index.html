@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Retail Dashboard</title>
+<title>Smart Retail Dashboard Pro</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -16,21 +16,19 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>📊</h2>
-
         <a href="#">Upload Data</a>
         <a href="#">Threshold</a>
-        <a href="#">Graphs</a>
+        <a href="#">Analytics</a>
         <a href="#">Report</a>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main -->
     <div class="content">
 
-        <!-- Upload Box -->
+        <!-- Upload -->
         <div class="top-box">
-
-            <h1>Smart Retail Anomaly Detection Dashboard</h1>
-            <p>Detect unusual transactions using Z-Score Model</p>
+            <h1>Smart Retail Anomaly Detection</h1>
+            <p>Professional AI Dashboard using Z-Score Algorithm</p>
 
             <form action="/upload" method="post" enctype="multipart/form-data">
 
@@ -48,11 +46,11 @@
 
                 <output>2</output>
 
-                <button type="submit">Detect</button>
+                <button type="submit">Analyze</button>
 
             </form>
-
         </div>
+
 
         {% if show_result %}
 
@@ -60,46 +58,53 @@
         <div class="cards">
 
             <div class="card green">
-                <h3>Total Transactions</h3>
+                <h3>Total Rows</h3>
                 <p>{{ total }}</p>
             </div>
 
             <div class="card red">
-                <h3>Anomalies Found</h3>
+                <h3>Anomalies</h3>
                 <p>{{ anomalies }}</p>
             </div>
 
             <div class="card blue">
-                <h3>Avg Score</h3>
+                <h3>Average Score</h3>
                 <p>{{ avg }}</p>
             </div>
 
             <div class="card purple">
-                <h3>Detected Column</h3>
+                <h3>Column</h3>
                 <p>{{ column }}</p>
             </div>
 
+            <div class="card orange">
+                <h3>Accuracy</h3>
+                <p>{{ accuracy }}%</p>
+            </div>
+
         </div>
+
 
         <!-- Charts -->
         <div class="charts">
 
             <div class="graph-box">
-                <h2>Line Graph</h2>
+                <h2>Detection Graph</h2>
                 <img src="{{ url_for('static', filename='chart1.png') }}">
             </div>
 
             <div class="graph-box">
-                <h2>Histogram</h2>
+                <h2>Distribution</h2>
                 <img src="{{ url_for('static', filename='chart2.png') }}">
             </div>
 
             <div class="graph-box">
-                <h2>Boxplot</h2>
+                <h2>Normal vs Anomaly</h2>
                 <img src="{{ url_for('static', filename='chart3.png') }}">
             </div>
 
         </div>
+
 
         <!-- Download -->
         <div class="download">
@@ -108,10 +113,11 @@
             </a>
         </div>
 
+
         <!-- Table -->
         <div class="table-box">
 
-            <h2>Anomaly Table</h2>
+            <h2>Anomaly Table (Only True Rows)</h2>
 
             <table>
 
@@ -123,9 +129,35 @@
 
                 {% for row in table_data %}
                 <tr>
+
                     {% for col in columns %}
-                    <td>{{ row[col] }}</td>
+
+                        {% if col == "Is_Anomaly" %}
+                            <td>
+                                <span class="badge-red">
+                                    {{ row[col] }}
+                                </span>
+                            </td>
+
+                        {% elif col == "Risk" %}
+
+                            {% if row[col] == "High" %}
+                                <td><span class="badge-red">High</span></td>
+
+                            {% elif row[col] == "Medium" %}
+                                <td><span class="badge-orange">Medium</span></td>
+
+                            {% else %}
+                                <td><span class="badge-green">Low</span></td>
+                            {% endif %}
+
+                        {% else %}
+                            <td>{{ row[col] }}</td>
+
+                        {% endif %}
+
                     {% endfor %}
+
                 </tr>
                 {% endfor %}
 
