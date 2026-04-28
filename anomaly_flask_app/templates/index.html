@@ -2,172 +2,237 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Retail Dashboard Pro</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Smart Retail Anomaly Detection</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 
 <body>
 
 <div class="main">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>📊</h2>
-        <a href="#">Upload Data</a>
-        <a href="#">Threshold</a>
-        <a href="#">Analytics</a>
-        <a href="#">Report</a>
-    </div>
+<div class="sidebar">
 
-    <!-- Main -->
-    <div class="content">
+<h2>📊</h2>
 
-        <!-- Upload -->
-        <div class="top-box">
-            <h1>Smart Retail Anomaly Detection</h1>
-            <p>Professional AI Dashboard using Z-Score Algorithm</p>
+<a href="#">Upload Data</a>
+<a href="#">Threshold</a>
+<a href="#">Analytics</a>
+<a href="/download">Download</a>
 
-            <form action="/upload" method="post" enctype="multipart/form-data">
-
-                <input type="file" name="file" required>
-
-                <label>Threshold:</label>
-
-                <input type="range"
-                       min="1"
-                       max="5"
-                       step="0.1"
-                       value="2"
-                       name="threshold"
-                       oninput="this.nextElementSibling.value=this.value">
-
-                <output>2</output>
-
-                <button type="submit">Analyze</button>
-
-            </form>
-        </div>
+</div>
 
 
-        {% if show_result %}
 
-        <!-- Cards -->
-        <div class="cards">
+<div class="content">
 
-            <div class="card green">
-                <h3>Total Rows</h3>
-                <p>{{ total }}</p>
-            </div>
+<div class="top-box">
 
-            <div class="card red">
-                <h3>Anomalies</h3>
-                <p>{{ anomalies }}</p>
-            </div>
+<h1>Smart Retail Anomaly Detection</h1>
 
-            <div class="card blue">
-                <h3>Average Score</h3>
-                <p>{{ avg }}</p>
-            </div>
+<p>Auto Graph Generation from Uploaded CSV</p>
 
-            <div class="card purple">
-                <h3>Column</h3>
-                <p>{{ column }}</p>
-            </div>
+<form
+action="/upload"
+method="post"
+enctype="multipart/form-data">
 
-            <div class="card orange">
-                <h3>Accuracy</h3>
-                <p>{{ accuracy }}%</p>
-            </div>
+<input
+type="file"
+name="file"
+required>
 
-        </div>
+<label>Threshold:</label>
 
+<input
+type="range"
+min="1"
+max="4"
+step="0.5"
+value="1.5"
+name="threshold"
 
-        <!-- Charts -->
-        <div class="charts">
+oninput="
+this.nextElementSibling.value=this.value
+">
 
-            <div class="graph-box">
-                <h2>Detection Graph</h2>
-                <img src="{{ url_for('static', filename='chart1.png') }}">
-            </div>
+<output>1.5</output>
 
-            <div class="graph-box">
-                <h2>Distribution</h2>
-                <img src="{{ url_for('static', filename='chart2.png') }}">
-            </div>
+<button type="submit">
+Analyze
+</button>
 
-            <div class="graph-box">
-                <h2>Normal vs Anomaly</h2>
-                <img src="{{ url_for('static', filename='chart3.png') }}">
-            </div>
+</form>
 
-        </div>
+</div>
 
 
-        <!-- Download -->
-        <div class="download">
-            <a href="/download">
-                <button>⬇ Download Report</button>
-            </a>
-        </div>
+
+{% if show_result %}
+
+<div class="cards">
+
+<div class="card green">
+<h3>Total Rows</h3>
+<p>{{ total }}</p>
+</div>
+
+<div class="card red">
+<h3>Anomalies</h3>
+<p>{{ anomalies }}</p>
+</div>
+
+<div class="card blue">
+<h3>Average ZScore</h3>
+<p>{{ avg }}</p>
+</div>
+
+<div class="card purple">
+<h3>Mean</h3>
+<p>{{ mean }}</p>
+</div>
+
+<div class="card orange">
+<h3>Std Dev</h3>
+<p>{{ std }}</p>
+</div>
+
+<div class="card pink">
+<h3>Accuracy</h3>
+<p>{{ accuracy }}%</p>
+</div>
+
+</div>
 
 
-        <!-- Table -->
-        <div class="table-box">
 
-            <h2>Anomaly Table (Only True Rows)</h2>
+<div class="charts">
 
-            <table>
+{% for graph in generated_graphs %}
 
-                <tr>
-                    {% for col in columns %}
-                    <th>{{ col }}</th>
-                    {% endfor %}
-                </tr>
+<div class="graph-box">
 
-                {% for row in table_data %}
-                <tr>
+<h3>
+{{ graph.replace('.png','') }}
+</h3>
 
-                    {% for col in columns %}
+<img
+src="{{ url_for('static', filename=graph) }}?v={{ cache_id }}"
+alt="graph">
 
-                        {% if col == "Is_Anomaly" %}
-                            <td>
-                                <span class="badge-red">
-                                    {{ row[col] }}
-                                </span>
-                            </td>
+</div>
 
-                        {% elif col == "Risk" %}
+{% endfor %}
 
-                            {% if row[col] == "High" %}
-                                <td><span class="badge-red">High</span></td>
+</div>
 
-                            {% elif row[col] == "Medium" %}
-                                <td><span class="badge-orange">Medium</span></td>
 
-                            {% else %}
-                                <td><span class="badge-green">Low</span></td>
-                            {% endif %}
 
-                        {% else %}
-                            <td>{{ row[col] }}</td>
+<div class="download">
 
-                        {% endif %}
+<a href="/download">
 
-                    {% endfor %}
+<button>
+⬇ Download Report
+</button>
 
-                </tr>
-                {% endfor %}
+</a>
 
-            </table>
+</div>
 
-        </div>
 
-        {% endif %}
 
-    </div>
+<div class="table-box">
+
+<h2>
+Top Suspicious Transactions
+</h2>
+
+<table>
+
+<tr>
+
+{% for col in columns %}
+<th>{{ col }}</th>
+{% endfor %}
+
+</tr>
+
+
+{% for row in table_data %}
+<tr>
+
+{% for col in columns %}
+
+{% if col=="Is_Anomaly" %}
+
+{% if row[col]=="TRUE" %}
+<td>
+<span class="badge-red">
+TRUE
+</span>
+</td>
+{% else %}
+<td>
+<span class="badge-green">
+FALSE
+</span>
+</td>
+{% endif %}
+
+
+{% elif col=="Risk" %}
+
+{% if row[col]=="High" %}
+<td>
+<span class="badge-red">
+High
+</span>
+</td>
+
+{% elif row[col]=="Medium" %}
+<td>
+<span class="badge-orange">
+Medium
+</span>
+</td>
+
+{% else %}
+<td>
+<span class="badge-green">
+Low
+</span>
+</td>
+
+{% endif %}
+
+
+{% else %}
+
+<td>{{ row[col] }}</td>
+
+{% endif %}
+
+{% endfor %}
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endif %}
+
+</div>
 
 </div>
 
